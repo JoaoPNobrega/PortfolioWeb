@@ -459,66 +459,34 @@ a:hover {
 }
 
 @media (max-width: 900px) {
-  /* --- LAYOUT FINAL COM CONTROLO TOTAL --- */
+  .hero-section {
+    padding-top: 40px;
+    padding-bottom: 40px;
+  }
+
   .hero-layout {
     display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
+    flex-direction: column-reverse;
     align-items: center;
+    gap: 30px;
   }
 
-  /* Faz os filhos (h1, p) se comportarem como irmãos da imagem */
   .hero-text {
-    display: contents;
-  }
-
-  /* 1. TÍTULO com controlo total */
-  .hero-layout h1 {
-    flex-basis: 55%;
-    order: 1;
-    position: relative;
-    top: 200px;
-    left: 80px;
-  }
-
-  /* 2. IMAGEM com controlo total */
-  .hero-layout .hero-image {
-    flex-basis: 40%;
-    order: 2;
-    position: relative;
-    top: -100px;
-    right: -350px;
-  }
-
-  .hero-layout .hero-image img {
-    transform: none;
-    width: 100%;
-    height: auto;
-  }
-  
-  /* 3. Subtítulo em baixo de ambos */
-  .hero-layout p {
-    flex-basis: 100%;
     text-align: center;
-    order: 3;
-    margin-top: 25px;
-    position: relative;
-    top: -150px;
-    right: -50px;
   }
 
-  /* --- RESTO DOS AJUSTES (sem alterações) --- */
+  .hero-image img {
+    transform: none;
+  }
+
   .icon-dock-container {
     justify-content: center;
-    margin-top: 35px;
-    position: relative;
-    top: -160px;
-    right: -180px;
+    margin-top: 40px;
   }
 
   .about-layout {
     flex-direction: column;
-    text-align: center;
+    align-items: center;
     gap: 40px;
   }
 
@@ -526,13 +494,11 @@ a:hover {
     text-align: center;
   }
 
-  /* --- CORREÇÃO FINAL PARA O SELETOR DE SESSÃO --- */
   .switcher-nav {
-    position: flex; /* Garante que ele é fixo na tela */
-    top: 20px;       /* Posição original do topo */
-    left: 40%;       /* Posição original do centro */
-    transform: translateX(-50%); /* Centralização original */
-    right: auto;     /* Reseta qualquer valor de 'right' herdado */
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
   }
 }
 
