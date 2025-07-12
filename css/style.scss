@@ -459,24 +459,83 @@ a:hover {
 }
 
 @media (max-width: 900px) {
-  .hero-layout, .about-layout {
-    flex-direction: column-reverse;
+  /* --- LAYOUT FINAL COM CONTROLO TOTAL --- */
+  .hero-layout {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  /* Faz os filhos (h1, p) se comportarem como irmãos da imagem */
+  .hero-text {
+    display: contents;
+  }
+
+  /* 1. TÍTULO com controlo total */
+  .hero-layout h1 {
+    flex-basis: 55%;
+    order: 1;
+    position: relative;
+    top: 200px;
+    left: 80px;
+  }
+
+  /* 2. IMAGEM com controlo total */
+  .hero-layout .hero-image {
+    flex-basis: 40%;
+    order: 2;
+    position: relative;
+    top: -100px;
+    right: -350px;
+  }
+
+  .hero-layout .hero-image img {
+    transform: none;
+    width: 100%;
+    height: auto;
+  }
+  
+  /* 3. Subtítulo em baixo de ambos */
+  .hero-layout p {
+    flex-basis: 100%;
+    text-align: center;
+    order: 3;
+    margin-top: 25px;
+    position: relative;
+    top: -150px;
+    right: -50px;
+  }
+
+  /* --- RESTO DOS AJUSTES (sem alterações) --- */
+  .icon-dock-container {
+    justify-content: center;
+    margin-top: 35px;
+    position: relative;
+    top: -160px;
+    right: -180px;
+  }
+
+  .about-layout {
+    flex-direction: column;
     text-align: center;
     gap: 40px;
   }
-  .hero-text, .about-text {
+
+  .about-text, .about-skills h3 {
     text-align: center;
   }
-  .hero-text h1, .hero-text h2, .hero-text h3, .hero-text p, .about-text h1, .about-text h2, .about-text h3, .about-text p {
-    text-align: center;
-  }
-  .about-skills h3 {
-    text-align: center;
-  }
-  .icon-dock-container {
-    justify-content: center;
+
+  /* --- CORREÇÃO FINAL PARA O SELETOR DE SESSÃO --- */
+  .switcher-nav {
+    position: flex; /* Garante que ele é fixo na tela */
+    top: 20px;       /* Posição original do topo */
+    left: 40%;       /* Posição original do centro */
+    transform: translateX(-50%); /* Centralização original */
+    right: auto;     /* Reseta qualquer valor de 'right' herdado */
   }
 }
+
 @media (max-width: 768px) {
   .hero-text h1 {
     font-size: 3rem;
