@@ -111,7 +111,6 @@ document.addEventListener('DOMContentLoaded', () => {
             
             if (targetSection) {
                 if (targetId === '#contact') {
-                    // --- MÉTODO MAIS ROBUSTO PARA CALCULAR ALTURA ---
                     const body = document.body;
                     const html = document.documentElement;
                     const height = Math.max( body.scrollHeight, body.offsetHeight, 
