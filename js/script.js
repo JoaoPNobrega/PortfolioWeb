@@ -11,7 +11,7 @@ Vue.component('card', {
         <div class="card-bg" :style="[cardBgTransform, cardBgImage]"></div>
         <div class="card-info">
           <slot name="header"></slot>
-          <p><slot name="content"></slot></p> 
+          <p><slot name="content"></slot></p>
           <div class="project-links">
             <a :href="link" target="_blank" class="project-link">Ver no GitHub</a>
           </div>
@@ -68,79 +68,120 @@ const app = new Vue({
 });
 
 document.addEventListener('DOMContentLoaded', () => {
+    // SEU CÓDIGO EXISTENTE PARA NAVEGAÇÃO
     const navContainer = document.querySelector('.switcher-nav');
-    if (!navContainer) return;
+    if (navContainer) {
+        const navLinks = navContainer.querySelectorAll('.switcher__option');
+        let previousActiveIndex = 1;
 
-    const navLinks = navContainer.querySelectorAll('.switcher__option');
-    let previousActiveIndex = 1;
+        const setActiveLink = (newActiveLink) => {
+            if (!newActiveLink) return;
 
-    const setActiveLink = (newActiveLink) => {
-        if (!newActiveLink) return;
+            const newIndex = parseInt(newActiveLink.getAttribute('data-nav-index'));
+            const previousIndex = previousActiveIndex;
+            
+            if (newIndex === previousIndex) return;
 
-        const newIndex = parseInt(newActiveLink.getAttribute('data-nav-index'));
-        const previousIndex = previousActiveIndex;
-        
-        if (newIndex === previousIndex) return;
+            if (newIndex > previousIndex) {
+                navContainer.setAttribute('data-pill-direction', 'forward');
+            } else {
+                navContainer.setAttribute('data-pill-direction', 'backward');
+            }
 
-        if (newIndex > previousIndex) {
-            navContainer.setAttribute('data-pill-direction', 'forward');
-        } else {
-            navContainer.setAttribute('data-pill-direction', 'backward');
+            navLinks.forEach(l => l.classList.remove('active'));
+            newActiveLink.classList.add('active');
+            navContainer.setAttribute('data-active-index', newIndex);
+            
+            previousActiveIndex = newIndex;
+        };
+
+        const initialActiveLink = document.querySelector('.switcher__option.active');
+        if (initialActiveLink) {
+            previousActiveIndex = parseInt(initialActiveLink.getAttribute('data-nav-index'));
+            navContainer.setAttribute('data-active-index', previousActiveIndex);
         }
 
-        navLinks.forEach(l => l.classList.remove('active'));
-        newActiveLink.classList.add('active');
-        navContainer.setAttribute('data-active-index', newIndex);
-        
-        previousActiveIndex = newIndex;
-    };
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                setActiveLink(link);
 
-    const initialActiveLink = document.querySelector('.switcher__option.active');
-    if (initialActiveLink) {
-        previousActiveIndex = parseInt(initialActiveLink.getAttribute('data-nav-index'));
-        navContainer.setAttribute('data-active-index', previousActiveIndex);
+                const targetId = link.getAttribute('href');
+                const targetSection = document.querySelector(targetId);
+                
+                if (targetSection) {
+                    if (targetId === '#contact') {
+                        const body = document.body;
+                        const html = document.documentElement;
+                        const height = Math.max( body.scrollHeight, body.offsetHeight, 
+                                                html.clientHeight, html.scrollHeight, html.offsetHeight );
+
+                        window.scrollTo({
+                            top: height,
+                            behavior: 'smooth'
+                        });
+                    } else {
+                        window.scrollTo({
+                            top: targetSection.offsetTop - 120,
+                            behavior: 'smooth'
+                        });
+                    }
+                }
+            });
+        });
+
+        const sections = document.querySelectorAll('section[id]');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const activeLink = document.querySelector(`.switcher__option[href="#${entry.target.id}"]`);
+                    setActiveLink(activeLink);
+                }
+            });
+        }, { rootMargin: '-40% 0px -60% 0px' });
+
+        sections.forEach(section => {
+            observer.observe(section);
+        });
     }
 
-    navLinks.forEach(link => {
-        link.addEventListener('click', (e) => {
-            e.preventDefault();
-            setActiveLink(link);
+    const cvIcon = document.getElementById('cv-icon');
+    const cvPopup = document.getElementById('cv-popup');
+    const popupContent = document.querySelector('.popup-content');
+    const closeButton = document.querySelector('.close-btn');
+    const minimizeButton = document.querySelector('.minimize-btn');
+    const expandButton = document.querySelector('.expand-btn');
 
-            const targetId = link.getAttribute('href');
-            const targetSection = document.querySelector(targetId);
-            
-            if (targetSection) {
-                if (targetId === '#contact') {
-                    const body = document.body;
-                    const html = document.documentElement;
-                    const height = Math.max( body.scrollHeight, body.offsetHeight, 
-                                           html.clientHeight, html.scrollHeight, html.offsetHeight );
+    if (cvIcon && cvPopup && popupContent && closeButton && minimizeButton && expandButton) {
+        
+        cvIcon.addEventListener('click', (event) => {
+            event.preventDefault();
+            popupContent.classList.remove('closing');
+            cvPopup.classList.remove('maximized');
+            cvPopup.style.display = 'flex';
+        });
 
-                    window.scrollTo({
-                        top: height,
-                        behavior: 'smooth'
-                    });
-                } else {
-                    window.scrollTo({
-                        top: targetSection.offsetTop - 120,
-                        behavior: 'smooth'
-                    });
-                }
+        closeButton.addEventListener('click', () => {
+            cvPopup.style.display = 'none';
+        });
+
+        minimizeButton.addEventListener('click', () => {
+            popupContent.classList.add('closing');
+
+            popupContent.addEventListener('animationend', () => {
+                cvPopup.style.display = 'none';
+                popupContent.classList.remove('closing');
+            }, { once: true });
+        });
+
+        expandButton.addEventListener('click', () => {
+            cvPopup.classList.toggle('maximized');
+        });
+
+        cvPopup.addEventListener('click', (event) => {
+            if (event.target === cvPopup) {
+                cvPopup.style.display = 'none';
             }
         });
-    });
-
-    const sections = document.querySelectorAll('section[id]');
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                const activeLink = document.querySelector(`.switcher__option[href="#${entry.target.id}"]`);
-                setActiveLink(activeLink);
-            }
-        });
-    }, { rootMargin: '-40% 0px -60% 0px' });
-
-    sections.forEach(section => {
-        observer.observe(section);
-    });
+    }
 });
